@@ -1,0 +1,310 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-pink: #ff85b3;
+  --color-pink-deep: #d94383;
+  --color-pink-ink: #b02a66;
+  --color-lavender: #b49aff;
+  --color-purple-deep: #69428f;
+  --color-yellow: #ffe08a;
+  --color-mint: #9be7dd;
+  --color-peach: #ffb6a3;
+  --color-blush: #fff3f8;
+  --color-cream: #fff9ef;
+  --color-ink: #3d2851;
+  --color-sky: #9cc9ff;
+
+  --font-display: 'Fredoka', ui-rounded, system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --font-hand: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
+
+  --text-hero: clamp(2.5rem, 7vw, 5.5rem);
+  --text-scene: clamp(2rem, 4.5vw, 3.8rem);
+
+  --shadow-soft: 0 10px 30px -12px rgb(105 66 143 / 0.35);
+  --shadow-card: 0 18px 50px -20px rgb(105 66 143 / 0.45);
+}
+
+:root {
+  --pink: #ff85b3;
+  --pink-deep: #d94383;
+  --lavender: #b49aff;
+  --purple-deep: #69428f;
+  --yellow: #ffe08a;
+  --mint: #9be7dd;
+  --peach: #ffb6a3;
+  --blush: #fff3f8;
+  --white: #ffffff;
+  --ink: #3d2851;
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--blush);
+}
+
+/* The body stays transparent so the fixed, negative-z scene backdrop shows through. */
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  overflow-wrap: anywhere;
+}
+
+/* Scene headings receive programmatic focus after transitions; they are not tab stops. */
+[data-scene-heading]:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--purple-deep);
+  outline-offset: 3px;
+}
+
+/* ---------- Scene backgrounds ---------- */
+.bg-scene-welcome {
+  background:
+    radial-gradient(circle at 20% 15%, rgb(255 255 255 / 0.85), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgb(180 154 255 / 0.45), transparent 50%),
+    linear-gradient(160deg, #fff3f8 0%, #f6e6ff 55%, #e3d8ff 100%);
+}
+.bg-scene-heart-tree {
+  background:
+    radial-gradient(circle at 80% 10%, rgb(255 224 138 / 0.55), transparent 40%),
+    linear-gradient(180deg, #ffe1ec 0%, #ffd0c2 60%, #ffc2ad 100%);
+}
+.bg-scene-cake {
+  background:
+    radial-gradient(circle at 50% 38%, rgb(255 236 180 / 0.75), transparent 48%),
+    radial-gradient(circle at 50% 100%, rgb(255 255 255 / 0.5), transparent 40%),
+    linear-gradient(160deg, #e6dbff 0%, #f7c9e8 55%, #ffb7d3 100%);
+}
+.bg-scene-balloons {
+  background:
+    radial-gradient(circle at 15% 85%, rgb(255 255 255 / 0.6), transparent 45%),
+    linear-gradient(170deg, #e4dcff 0%, #d9ecfa 50%, #c9f2ea 100%);
+}
+.bg-scene-memories {
+  background:
+    radial-gradient(circle at 10% 10%, rgb(255 255 255 / 0.9), transparent 40%),
+    repeating-linear-gradient(0deg, transparent 0 31px, rgb(217 67 131 / 0.06) 31px 32px),
+    linear-gradient(170deg, #fff9ef 0%, #ffeef2 55%, #ffd9e6 100%);
+}
+.bg-scene-finale {
+  background:
+    radial-gradient(circle at 50% 0%, rgb(255 224 138 / 0.5), transparent 50%),
+    linear-gradient(180deg, #7b5fc4 0%, #b58ad8 40%, #ffb6d3 100%);
+}
+.bg-scene-letter {
+  /* Lavender dusk melting into a moonlit blue-purple, landing on readable blush. */
+  background:
+    radial-gradient(circle at 78% 6%, rgb(255 243 184 / 0.4), transparent 30%),
+    radial-gradient(circle at 50% 0%, rgb(180 154 255 / 0.6), transparent 55%),
+    linear-gradient(180deg, #b9a4ec 0%, #cdb8f2 30%, #ead8f6 60%, #fff3f8 100%);
+}
+
+/* ---------- Decorative motion ---------- */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+@keyframes float-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(6px, -14px, 0) rotate(8deg);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgb(255 133 179 / 0.55));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgb(255 133 179 / 0.95));
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) rotate(-2deg);
+  }
+  50% {
+    transform: scale(0.92, 1.08) rotate(2deg);
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes wing-flap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.35);
+  }
+}
+@keyframes firefly-glow {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(5px, -8px, 0);
+  }
+}
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.9;
+  }
+  55% {
+    transform: translate3d(26px, 55vh, 0) rotate(160deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(-14px, 108vh, 0) rotate(320deg);
+    opacity: 0.4;
+  }
+}
+
+.animate-bob {
+  animation: bob 3.2s ease-in-out infinite;
+}
+.animate-float {
+  animation: float-drift 6s ease-in-out infinite;
+}
+.animate-twinkle {
+  animation: twinkle 2.6s ease-in-out infinite;
+}
+.animate-glow {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+.animate-flicker {
+  animation: flicker 0.9s ease-in-out infinite;
+  transform-origin: 50% 90%;
+  transform-box: fill-box;
+}
+.animate-sway {
+  animation: sway 4s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+.animate-flap {
+  animation: wing-flap 0.45s ease-in-out infinite alternate;
+  transform-box: view-box;
+}
+.animate-firefly {
+  animation: firefly-glow 4s ease-in-out infinite;
+}
+.animate-petal {
+  animation: petal-fall 11s linear infinite;
+}
+
+.text-shadow-soft {
+  text-shadow: 0 2px 0 rgb(255 255 255 / 0.65);
+}
+
+.safe-bottom {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+.safe-top {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+.safe-x {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* Polaroid gallery: keep vertical page scrolling native while we handle horizontal swipes. */
+.touch-pan-y {
+  touch-action: pan-y;
+}
+
+/* OS preference, and the in-app "Reduce animations" toggle (set as an attribute on <html>). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-reduce-anim] *,
+html[data-reduce-anim] *::before,
+html[data-reduce-anim] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ---------- Memory lane: hanging photos on a rope, auto-scrolling ---------- */
+@keyframes memory-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes photo-swing {
+  0%, 100% { transform: rotate(var(--tilt, -2deg)); }
+  50% { transform: rotate(calc(var(--tilt, -2deg) * -1)); }
+}
+.memory-track {
+  animation: memory-scroll var(--scroll-time, 90s) linear infinite;
+}
+.memory-marquee:hover .memory-track,
+.memory-marquee:active .memory-track {
+  animation-play-state: paused;
+}
+.hang-photo {
+  transform-origin: 50% 0;
+  animation: photo-swing 5s ease-in-out infinite;
+}
+[data-reduce-anim] .memory-track,
+[data-reduce-anim] .hang-photo {
+  animation: none;
+}
