@@ -57,8 +57,8 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
     try {
       if (!audio) {
         audio = new Audio(src);
-        // Skip the song's intro: start at 15s, and loop back to 15s rather than 0.
-        const START_AT = 15;
+        // Skip the song's intro: start at 10s, and loop back to 10s rather than 0.
+        const START_AT = 10;
         const music = audio;
         music.currentTime = START_AT;
         music.addEventListener('loadedmetadata', () => {
