@@ -6,7 +6,7 @@ import { SceneIndex } from '../state/constants';
 import { useExperience } from '../state/ExperienceContext';
 import { isSceneComplete } from '../state/experienceReducer';
 
-const AUTO_MS = 2800;
+const AUTO_MS = 2000;
 const UNLOCK_AT = 0.5;
 const SWIPE_MIN_PX = 40;
 

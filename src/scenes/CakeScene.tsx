@@ -68,7 +68,7 @@ export function CakeScene() {
       sceneId="cake"
       heading="Time to cut the cake!"
       intro={<p className="font-semibold">{prompt}</p>}
-      actions={<SceneActions canContinue={complete} continueLabel="Continue" showSkip={!complete} focusOnReveal />}
+      actions={<SceneActions canContinue={complete} continueLabel="Continue" focusOnReveal />}
     >
       {/* Party bunting across the top */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 overflow-hidden" style={{ zIndex: -1 }}>
