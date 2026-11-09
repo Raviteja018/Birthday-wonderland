@@ -1,5 +1,4 @@
 import { useExperience } from '../state/ExperienceContext';
-import { playSfx } from '../utils/sfx';
 
 /** Global sound switch (off by default). Controls the optional song and the tiny synthesized effects. */
 export function AudioToggle() {
@@ -16,13 +15,10 @@ export function AudioToggle() {
     const next = !enabled;
     audio.clearBlocked();
     dispatch({ type: 'SET_MUSIC_ENABLED', enabled: next });
-    if (next) playSfx('sparkle');
   };
 
   const notice =
-    enabled && audio.musicError === 'blocked'
-      ? 'Your browser paused the music. Tap the sound button again to retry.'
-      : enabled && audio.musicError === 'unavailable'
+    enabled && audio.musicError === 'unavailable'
         ? "The song couldn't play, but sound effects are on."
         : '';
 

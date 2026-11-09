@@ -14,7 +14,7 @@ import type { BirthdayConfig } from '../types/birthday';
 export type { BirthdayConfig, MemoryItem, Relationship } from '../types/birthday';
 
 export const birthdayConfig: BirthdayConfig = {
-  recipientName: 'Birthday Star',
+  recipientName: 'Durga',
   senderName: 'Someone Who Cares',
   relationship: 'someone-special',
   welcomeSubtitle: 'I made a tiny magical world just for your birthday.',

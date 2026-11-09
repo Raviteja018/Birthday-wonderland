@@ -71,7 +71,7 @@ export function WelcomeScene() {
       sceneId="welcome"
       eyebrow="A little surprise for you!"
       heading={
-        <span className="block bg-gradient-to-r from-[#d94383] via-[#9b6bd6] to-[#ff7aa8] bg-clip-text text-[length:var(--text-hero)] text-transparent">
+        <span className="block bg-gradient-to-r from-[#d94383] via-[#9b6bd6] to-[#ff7aa8] bg-clip-text text-[length:var(--text-hero)] text-transparent [text-shadow:none]">
           <StaggeredHeadline text={`Hey, ${config.recipientName}!`} reduced={reducedMotion} />
         </span>
       }
