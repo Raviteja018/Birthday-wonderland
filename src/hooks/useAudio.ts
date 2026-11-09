@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { playSfx, type SfxKind } from '../utils/sfx';
+import type { SfxKind } from '../utils/sfx';
 
 export type MusicError = 'blocked' | 'unavailable';
 
@@ -90,9 +90,10 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
 
   const sfx = useCallback(
     (kind: SfxKind) => {
-      if (enabled) playSfx(kind);
+      // Button and interaction sounds are intentionally disabled; only the background music plays.
+      void kind;
     },
-    [enabled],
+    [],
   );
   const duck = useCallback(() => setDucked(true), []);
   const unduck = useCallback(() => setDucked(false), []);
@@ -111,6 +112,15 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
     }, 100);
   }, []);
   const resume = useCallback(() => setStopped(false), []);
+  // Browsers refuse sound until the first touch/click; start the music on that very first interaction.
+  useEffect(() => {
+    if (musicError !== "blocked") return;
+    const retry = () => setMusicError(null);
+    const events = ["pointerdown", "keydown", "touchstart"] as const;
+    events.forEach((e) => window.addEventListener(e, retry, { once: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, retry));
+  }, [musicError]);
+
   const clearBlocked = useCallback(() => setMusicError((e) => (e === 'blocked' ? null : e)), []);
 
   return {
