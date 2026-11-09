@@ -1,7 +1,6 @@
 import {
   CANDLE_COUNT,
   HEART_COUNT,
-  HEARTS_TO_DISCOVER,
   LAST_SCENE,
   SceneIndex,
 } from './constants';
