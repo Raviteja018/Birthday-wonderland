@@ -42,7 +42,7 @@ export const initialExperienceState: ExperienceState = {
   hasViewedMemory: false,
   letterOpened: false,
   isTransitioning: false,
-  isMusicEnabled: false,
+  isMusicEnabled: true,
 };
 
 /** Scenes whose activity can be skipped (the welcome gift and the letter have their own actions). */

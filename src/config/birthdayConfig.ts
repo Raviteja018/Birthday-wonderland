@@ -71,6 +71,6 @@ export const birthdayConfig: BirthdayConfig = {
     'And చెప్పడం మర్చిపోయా... నీకో cute surprise ఉంది next! 🎁 నచ్చుతుందని అనుకుంటున్నా మరి....',
   ],
   letterClosingLine: 'May your next trip around the sun be filled with laughter, love, and little adventures.',
-  // musicSrc: '/audio/our-song.mp3',
-  // musicTitle: 'Our song',
+  musicSrc: '/audio/music.mp3',
+  musicTitle: 'Night Changes',
 };

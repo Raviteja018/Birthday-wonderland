@@ -140,9 +140,11 @@ export const CakeIllustration = memo(function CakeIllustration({ cut, slicing = 
       <rect x="95" y="172" width="170" height="22" rx="11" fill="#9C7FE6" opacity="0.35" />
       <path d="M106 126 L106 184" stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity="0.3" />
       <path d={FROSTING_TOP} fill="url(#cake-cream)" />
-      {[130, 180, 230].map((x) => (
+      {[118, 242].map((x) => (
         <path key={x} transform={`translate(${x - 9} 150) scale(0.75)`} d={HEART} fill="#FF6FA3" />
       ))}
+      {/* The age, big and bold on the top tier */}
+      <text x="180" y="170" textAnchor="middle" fontSize="50" fontWeight="900" fontFamily="Fredoka, Baloo 2, system-ui, sans-serif" fill="#FF4F8B" stroke="#FFFFFF" strokeWidth="5" paintOrder="stroke" letterSpacing="2">25</text>
       {Array.from({ length: 9 }, (_, i) => (
         <circle key={i} cx={113 + i * 17.5} cy="188" r="4" fill="#FFFFFF" stroke="#D7C8FA" strokeWidth="1" />
       ))}

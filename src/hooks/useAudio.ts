@@ -14,6 +14,10 @@ export type AudioControls = {
   unduck: () => void;
   /** Allow another playback attempt after the browser blocked autoplay. */
   clearBlocked: () => void;
+  /** Fade the music out over ~1.5s and stop it for good (used when the finale video starts). */
+  fadeOut: () => void;
+  /** Allow the music to play again after fadeOut (used on Replay). */
+  resume: () => void;
 };
 
 function subscribeVisibility(onChange: () => void) {
@@ -34,9 +38,10 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
   const [musicError, setMusicError] = useState<MusicError | null>(null);
   const [ducked, setDucked] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [stopped, setStopped] = useState(false);
   const hidden = useSyncExternalStore(subscribeVisibility, getHidden, () => false);
 
-  const shouldPlay = !!src && enabled && !ducked && !hidden && musicError === null;
+  const shouldPlay = !!src && enabled && !ducked && !hidden && !stopped && musicError === null;
 
   useEffect(() => {
     if (!src) return;
@@ -59,6 +64,7 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
         audio.addEventListener('pause', () => setIsPlaying(false));
         audioRef.current = audio;
       }
+      audio.volume = 0.45;
       const result = audio.play() as Promise<void> | undefined;
       result?.catch?.(fail);
     } catch (err) {
@@ -90,6 +96,21 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
   );
   const duck = useCallback(() => setDucked(true), []);
   const unduck = useCallback(() => setDucked(false), []);
+  const fadeOut = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio || audio.paused) {
+      setStopped(true);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      audio.volume = Math.max(0, audio.volume - 0.03);
+      if (audio.volume <= 0.001) {
+        window.clearInterval(timer);
+        setStopped(true);
+      }
+    }, 100);
+  }, []);
+  const resume = useCallback(() => setStopped(false), []);
   const clearBlocked = useCallback(() => setMusicError((e) => (e === 'blocked' ? null : e)), []);
 
   return {
@@ -100,5 +121,7 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
     duck,
     unduck,
     clearBlocked,
+    fadeOut,
+    resume,
   };
 }

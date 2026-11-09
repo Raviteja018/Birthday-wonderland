@@ -11,7 +11,7 @@ type Step = { q: string; yes: string; no: string; yesReply: string; noReply: str
 const STEPS: Step[] = [
   { q: 'Psst… Durga… are you ready for a surprise? 🤫', yes: 'Yes! 😍', no: 'No… 🙈', yesReply: 'Ooh, so brave… 👀', noReply: 'Too late, it is already coming! 😈' },
   { q: 'Are you REALLY sure? It is a big one… 😏', yes: 'Yes, really!', no: 'Not sure 😬', yesReply: 'Hmm… we will see about that 🤨', noReply: 'Nice try! There is no turning back now 😈' },
-  { q: 'Can you handle a LOT of cuteness? 🐰', yes: 'Bring it on! 💪', no: 'Maybe not… 🙈', yesReply: 'We will see about that… 😏', noReply: 'Too bad, the cuteness is unstoppable! 🥰' },
+  { q: 'Can you handle a LOT of cuteness?', yes: 'Bring it on! 💪', no: 'Maybe not… 🙈', yesReply: 'We will see about that… 😏', noReply: 'Too bad, the cuteness is unstoppable! 🥰' },
   { q: 'Last chance to turn back… 😱 Shall I open it?', yes: 'Open it! 🎁', no: 'Wait, no! 😨', yesReply: 'Here we go… 💥', noReply: 'Opening it anyway… 💥' },
 ];
 
@@ -53,6 +53,7 @@ export function FinaleScene() {
       } else {
         setCount(null);
         setRevealed(true);
+        audio.fadeOut(); // the song fades away so the video's own sound is heard
         fireConfetti(reducedMotion);
         audio.playSfx("chime");
       }
@@ -85,6 +86,7 @@ export function FinaleScene() {
             disabled={state.isTransitioning}
             onClick={() => {
               resetConfetti();
+              audio.resume();
               dispatch({ type: 'REPLAY' });
             }}
           >

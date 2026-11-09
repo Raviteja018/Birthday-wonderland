@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { Button } from '../components/Button';
+import { BalloonIllustration } from "../components/BalloonIllustration";
 import { Butterfly } from '../components/FairyAmbience';
 import { GiftIllustration, type GiftPhase } from '../components/GiftIllustration';
 import { SceneLayout } from '../components/SceneLayout';
@@ -70,7 +71,7 @@ export function WelcomeScene() {
       sceneId="welcome"
       eyebrow="A little surprise for you!"
       heading={
-        <span className="block text-[length:var(--text-hero)]">
+        <span className="block bg-gradient-to-r from-[#d94383] via-[#9b6bd6] to-[#ff7aa8] bg-clip-text text-[length:var(--text-hero)] text-transparent">
           <StaggeredHeadline text={`Hey, ${config.recipientName}!`} reduced={reducedMotion} />
         </span>
       }
@@ -97,9 +98,29 @@ export function WelcomeScene() {
           {/* Two butterflies cross the meadow once. */}
           <Butterfly flight="cross" className="w-10" top="30%" color="#B8A2FF" delay={0.8} duration={12} reduced={reducedMotion} />
           <Butterfly flight="cross" className="w-7" top="46%" color="#FF86B5" delay={2.4} duration={15} reduced={reducedMotion} />
+          {/* Cute floating balloons and clouds drifting up the sides */}
+          {[
+            { left: "4%", color: "#FF85B3", shade: "#D94383", delay: 0, size: "w-14 sm:w-20" },
+            { left: "86%", color: "#B49AFF", shade: "#7B5FC4", delay: 1.2, size: "w-12 sm:w-16" },
+            { left: "14%", color: "#FFE08A", shade: "#E6A93A", delay: 2.4, size: "w-10 sm:w-14" },
+            { left: "76%", color: "#9BE7DD", shade: "#4BAE9F", delay: 0.6, size: "w-10 sm:w-14" },
+          ].map((b, i) => (
+            <motion.div
+              key={i}
+              className={`absolute bottom-[-12%] ${b.size}`}
+              style={{ left: b.left }}
+              animate={{ y: ["0vh", "-105vh"], x: [0, 14, -14, 0] }}
+              transition={{ duration: 14 + i * 2, delay: b.delay, repeat: Infinity, ease: "linear" }}
+            >
+              <BalloonIllustration color={b.color} shade={b.shade} />
+            </motion.div>
+          ))}
         </div>
       )}
 
+      <div className="relative">
+        {/* Soft golden glow behind the gift */}
+        <div aria-hidden="true" className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgb(255_224_138/0.75),rgb(255_133_179/0.25)_55%,transparent_72%)] blur-xl" />
       <button
         type="button"
         onClick={openSurprise}
@@ -111,6 +132,7 @@ export function WelcomeScene() {
           <GiftIllustration phase={phase} />
         </span>
       </button>
+      </div>
     </SceneLayout>
   );
 }

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
+import { useRef, useState, type PointerEvent } from 'react';
 import { Button } from '../components/Button';
 import { CakeIllustration, CandleGraphic } from '../components/CakeIllustration';
 import { STAR_PATH } from '../components/FairyAmbience';
@@ -21,11 +21,27 @@ export function CakeScene() {
   const [smoking, setSmoking] = useState<number[]>([]);
   const [slicing, setSlicing] = useState(false);
 
-  const blowOut = (id: number) => {
-    if (out.includes(id)) return;
-    dispatch({ type: 'EXTINGUISH_CANDLE', id });
-    setSmoking((s) => [...s, id]);
+  // One tap on any candle blows out all of them.
+  const blowOut = () => {
+    if (allOut) return;
+    for (let id = 0; id < CANDLE_COUNT; id++) {
+      if (!out.includes(id)) dispatch({ type: 'EXTINGUISH_CANDLE', id });
+    }
+    setSmoking(Array.from({ length: CANDLE_COUNT }, (_, i) => i));
     audio.playSfx('puff');
+  };
+
+  // Swiping across the cake (left→right or right→left) cuts it.
+  const swipeStart = useRef<number | null>(null);
+  const onSwipeDown = (e: PointerEvent<HTMLDivElement>) => {
+    swipeStart.current = e.clientX;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onSwipeEnd = (e: PointerEvent<HTMLDivElement>) => {
+    const start = swipeStart.current;
+    swipeStart.current = null;
+    if (start === null) return;
+    if (Math.abs(e.clientX - start) >= e.currentTarget.clientWidth * 0.4) cutCake();
   };
 
   // The knife cuts first (SVG animation), then the slice lifts out and the celebration starts.
@@ -44,8 +60,8 @@ export function CakeScene() {
   const prompt = state.cakeCut
     ? 'Hooray! 🎉'
     : allOut
-      ? 'Step 2: tap the knife and slice the cake!'
-      : 'Step 1: tap each candle to blow it out!';
+      ? 'Step 2: swipe across the cake to cut it!'
+      : 'Step 1: tap the candles to blow them all out!';
 
   return (
     <SceneLayout
@@ -94,23 +110,31 @@ export function CakeScene() {
           </motion.div>
         )}
         {allOut && !slicing && !state.cakeCut && (
-          <motion.button
-            type="button"
-            onClick={cutCake}
-            disabled={state.cakeCut}
-            aria-label="Cut the cake with the knife"
-            className="absolute top-[30%] left-1/2 z-10 -translate-x-1/2 cursor-pointer text-6xl drop-shadow-lg disabled:cursor-default"
-            initial={{ opacity: 0, y: -40, rotate: -20 }}
-            animate={
-              state.cakeCut
-                ? { y: 70, rotate: 0, opacity: 0, transition: { duration: 0.6 } }
-                : reducedMotion
-                  ? { opacity: 1, y: 0, rotate: 0 }
-                  : { opacity: 1, y: [0, 22, 0], rotate: [-20, 0, -20], transition: { repeat: Infinity, duration: 1.2 } }
-            }
+          <div
+            className="absolute inset-x-[-4%] top-[52%] z-10 h-[40%] touch-none cursor-grab"
+            onPointerDown={onSwipeDown}
+            onPointerUp={onSwipeEnd}
+            onPointerCancel={() => (swipeStart.current = null)}
           >
-            🔪
-          </motion.button>
+            {/* Guide mark: a dashed horizontal cut line with a knife sliding along it. */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 flex items-center">
+              <div className="h-0 flex-1 border-t-[3px] border-dashed border-white drop-shadow" />
+              <span className="mx-1 text-xl font-black text-white drop-shadow">➜</span>
+            </div>
+            <motion.span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 -mt-7 text-5xl drop-shadow-lg"
+              style={{ rotate: 90 }}
+              initial={{ left: '0%' }}
+              animate={reducedMotion ? { left: '40%' } : { left: ['0%', '82%'] }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut', repeatDelay: 0.4 }}
+            >
+              🔪
+            </motion.span>
+            <p aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[68%] text-center text-sm font-extrabold text-white drop-shadow">
+              Swipe to cut
+            </p>
+          </div>
         )}
         {state.cakeCut && !reducedMotion && (
           <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -134,7 +158,7 @@ export function CakeScene() {
             <button
               key={id}
               type="button"
-              onClick={() => blowOut(id)}
+              onClick={blowOut}
               aria-disabled={!lit}
               aria-label={lit ? `Blow out candle ${id + 1}` : `Candle ${id + 1} blown out`}
               className={`absolute top-[1.8%] flex h-[33.3%] w-[max(44px,11.1%)] -translate-x-1/2 justify-center rounded-2xl ${lit ? 'cursor-pointer hover:bg-white/25' : 'cursor-default'}`}
@@ -176,7 +200,7 @@ export function CakeScene() {
             </motion.p>
           ) : allOut ? (
             <motion.div key="cut" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-              <Button onClick={cutCake} disabled={slicing}>{slicing ? "Slicing… 🍰" : "Slice it! 🔪"}</Button>
+              <Button onClick={cutCake} disabled={slicing}>{slicing ? "Cutting… 🍰" : "Or tap here to cut 🔪"}</Button>
             </motion.div>
           ) : (
             <motion.p key="count" exit={{ opacity: 0 }} className="rounded-full bg-white/70 px-4 py-1.5 text-sm font-bold text-purple-deep" aria-hidden="true">
