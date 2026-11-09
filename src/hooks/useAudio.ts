@@ -57,7 +57,17 @@ export function useAudio(src: string | undefined, enabled: boolean): AudioContro
     try {
       if (!audio) {
         audio = new Audio(src);
-        audio.loop = true;
+        // Skip the song's intro: start at 15s, and loop back to 15s rather than 0.
+        const START_AT = 15;
+        const music = audio;
+        music.currentTime = START_AT;
+        music.addEventListener('loadedmetadata', () => {
+          if (music.currentTime < START_AT) music.currentTime = START_AT;
+        }, { once: true });
+        music.addEventListener('ended', () => {
+          music.currentTime = START_AT;
+          void music.play().catch(() => undefined);
+        });
         audio.volume = 0.45;
         audio.addEventListener('error', () => setMusicError('unavailable'));
         audio.addEventListener('playing', () => setIsPlaying(true));
